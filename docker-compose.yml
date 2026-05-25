@@ -1,0 +1,112 @@
+services:
+  eurekaserver:
+      container_name: eurekaserver
+      image: mrunixmaxi/modulo-eureka:1.0
+      environment:
+      - JAVA_OPTS=-XX:-UseContainerSupport
+      restart: always
+      ports:
+      - "8761:8761"
+      networks:
+      - microservices
+      hostname: eurekaserver
+
+  configserver:
+    container_name: configserver
+    image: mrunixmaxi/configserver:1.0
+    environment:
+     - JAVA_OPTS=-XX:-UseContainerSupport
+    restart: always
+    ports:
+     - "8888:8888"
+    depends_on:
+     - eurekaserver
+    networks:
+     - microservices
+    hostname: configserver
+
+  gateway:
+    container_name: gateway
+    image: mrunixmaxi/modulo-gateway:1.0
+    environment:
+    - JAVA_OPTS=-XX:-UseContainerSupport
+    restart: always
+    ports:
+    - "8080:8080"
+    networks:
+    - microservices
+    hostname: gateway
+    depends_on:
+     - eurekaserver
+  db:
+   image: mysql:5.7
+   container_name: hospitaldb
+   command: --default-authentication-plugin=mysql_native_password
+   restart: always
+   environment:
+     # Use these to automatically create the DB and root user
+     MYSQL_ROOT_PASSWORD: admin
+     MYSQL_DATABASE: hospitaldb
+     MYSQL_PASSWORD: admin
+     MYSQL_USER: admin
+   ports:
+     - "3306:3306"
+   networks:
+     - microservices
+   volumes:
+     - ./dump.sql:/docker-entrypoint-initdb.d/init.sql
+     - mysql_data:/var/lib/mysql
+   hostname: db
+
+  atenciones:
+    container_name: atenciones
+    image: mrunixmaxi/modulo-atenciones:1.0
+    environment:
+    - JAVA_OPTS=-XX:-UseContainerSupport
+    # 👇 AGREGADO: Forzamos el nombre de la app y la ruta del configserver en la red de Docker
+    - SPRING_APPLICATION_NAME=modulo-atenciones
+    - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    - SPRING_PROFILES_ACTIVE=dev
+    - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+    - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eurekaserver:8761/eureka/
+    restart: always
+    ports:
+    - "8082:8082"
+    networks:
+    - microservices
+    hostname: atenciones
+    depends_on:
+     - eurekaserver
+     - configserver
+     - db
+
+  pacientes:
+    container_name: pacientes
+    image: mrunixmaxi/modulo-pacientes:1.0
+    environment:
+    - JAVA_OPTS=-XX:-UseContainerSupport
+    # 👇 AGREGADO: Forzamos el nombre de la app y la ruta del configserver en la red de Docker
+    - SPRING_APPLICATION_NAME=modulo-pacientes
+    - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    - SPRING_PROFILES_ACTIVE=dev
+    - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+    - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eurekaserver:8761/eureka/
+    restart: always
+    ports:
+    - "8081:8081"
+    networks:
+    - microservices
+    hostname: pacientes
+    depends_on:
+     - eurekaserver
+     - configserver
+     - db
+
+
+
+volumes:
+  mysql_data:
+ 
+networks:
+  microservices:
+    driver: bridge

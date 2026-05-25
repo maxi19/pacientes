@@ -12,10 +12,4 @@ public class ConfigController {
     String message ;
 
 	
-	@RequestMapping("/mostrar")
-	public String mensaje() {
-		System.out.println("hola");
-		return this.mensaje();
-	}
-	
 }

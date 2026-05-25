@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    config:
+      profile: dev
+      uri: http://configserver:8888
+      import: "optional:configserver:http://configserver:8888"

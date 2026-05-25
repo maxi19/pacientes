@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: modulo-pacientes
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+  client:
+    service-url:
+        defaultZone: http://eurekaserver:8761/eureka/
