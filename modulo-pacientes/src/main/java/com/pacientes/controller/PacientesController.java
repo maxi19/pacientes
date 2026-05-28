@@ -17,7 +17,7 @@ import com.pacientes.mappers.PacienteMapper;
 import com.pacientes.service.PacienteService;
 
 @RestController
-@RequestMapping("/pacientes")
+@RequestMapping("/api/pacientes")
 public class PacientesController {
 
 	@Autowired

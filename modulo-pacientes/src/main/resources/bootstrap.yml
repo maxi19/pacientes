@@ -1,6 +1,11 @@
 spring:
-  cloud:
-    config:
-      profile: dev
-      uri: http://configserver:8888
-      import: "optional:configserver:http://configserver:8888"
+  config:
+    activate:
+      on-profile: dev
+    import: "optional:configserver:http://localhost:8888"
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import: "optional:configserver:http://configserver:8888"
