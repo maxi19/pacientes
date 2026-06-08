@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pacientes.controller.dto.PacienteDto;
+import com.pacientes.domain.Paciente;
 import com.pacientes.mappers.PacienteMapper;
 import com.pacientes.service.PacienteService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/pacientes")
+@Tag(name = "Pacientes")
 public class PacientesController {
 
 	@Autowired
@@ -40,6 +44,18 @@ public class PacientesController {
 		}
 
 		return ResponseEntity.ok(dtos);
+	}
+	
+	
+	@RequestMapping(value ="/hello", method={RequestMethod.GET} )
+	public ResponseEntity<Paciente> hello() throws Exception {
+		Paciente paciente = new Paciente();
+		paciente.setApellido("guzman");
+		paciente.setDocumento("31983056");
+		paciente.setNombre("maxi");
+		paciente.setId(1);
+		
+		return ResponseEntity.ok(paciente);
 	}
 	
 }
