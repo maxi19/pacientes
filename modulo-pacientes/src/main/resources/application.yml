@@ -1,10 +1,18 @@
 spring:
   application:
     name: modulo-pacientes
-
+cloud:
+    config:
+     profile: prod
+h2:
+  console:
+    enabled: true
 eureka:
   instance:
+    prefer-ip-address: true
     instance-id: ${spring.application.name}:${random.uuid}
   client:
     service-url:
         defaultZone: http://eurekaserver:8761/eureka/
+server:
+  forward-headers-strategy: framework
