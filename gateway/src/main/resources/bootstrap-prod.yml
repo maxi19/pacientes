@@ -1,7 +1,0 @@
-spring:
-  cloud:
-    config:
-      profile: dev
-      uri: http://configserver:8888
-server:
-  port: '8080'

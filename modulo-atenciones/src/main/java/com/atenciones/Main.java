@@ -9,8 +9,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class Main {
 
 		public static void main(String[] args) {
-		    SpringApplication app = new SpringApplication(Main.class);
-		    app.setAdditionalProfiles("dev");
-		    app.run(args);
+		   // SpringApplication app = new SpringApplication(Main.class);
+		   // app.setAdditionalProfiles("dev");
+		   // app.run(args);
+			SpringApplication.run(Main.class, args);
+
 	}
 }

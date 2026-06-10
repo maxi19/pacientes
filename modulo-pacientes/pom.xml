@@ -44,12 +44,6 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-	   <dependency>
-		    <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <version>2.2.224</version>
-		    <scope>runtime</scope>
-		</dependency>
 	   
 		<dependency>
 		    <groupId>org.springdoc</groupId>
@@ -59,7 +53,28 @@
 	   
     </dependencies>
   
-  
+  <profiles>
+    <!-- Default Profile (e.g., Development) WITH H2 -->
+    <profile>
+        <id>dev</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <dependencies>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <scope>runtime</scope>
+            </dependency>
+        </dependencies>
+    </profile>
+
+    <!-- Production Profile WITHOUT H2 -->
+    <profile>
+        <id>prod</id>
+        <!-- H2 is excluded here because it is not declared in this profile's dependencies -->
+    </profile>
+   </profiles>
   
   
 </project>

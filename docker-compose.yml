@@ -16,6 +16,7 @@ services:
     image: mrunixmaxi/configserver:1.0
     environment:
      - JAVA_OPTS=-XX:-UseContainerSupport
+     - SPRING_PROFILES_ACTIVE=prod
     restart: always
     ports:
      - "8888:8888"
@@ -32,7 +33,7 @@ services:
     - JAVA_OPTS=-XX:-UseContainerSupport
     - SPRING_APPLICATION_NAME=gateway
     - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-    - SPRING_PROFILES_ACTIVE=dev
+    - SPRING_PROFILES_ACTIVE=prod
     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
     - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eurekaserver:8761/eureka/
     restart: always
@@ -71,7 +72,7 @@ services:
     # 👇 AGREGADO: Forzamos el nombre de la app y la ruta del configserver en la red de Docker
     - SPRING_APPLICATION_NAME=modulo-atenciones
     - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-    - SPRING_PROFILES_ACTIVE=dev
+    - SPRING_PROFILES_ACTIVE=prod
     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
     - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eurekaserver:8761/eureka/
     restart: always
@@ -93,7 +94,7 @@ services:
     # 👇 AGREGADO: Forzamos el nombre de la app y la ruta del configserver en la red de Docker
     - SPRING_APPLICATION_NAME=modulo-pacientes
     - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-    - SPRING_PROFILES_ACTIVE=dev
+    - SPRING_PROFILES_ACTIVE=prod
     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
     - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eurekaserver:8761/eureka/
     restart: always

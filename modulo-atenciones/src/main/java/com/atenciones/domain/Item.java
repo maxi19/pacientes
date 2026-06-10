@@ -27,7 +27,6 @@ public class Item {
 	private String documento;
 	private String codigo;
 	private LocalDate fecha;
-	private TipoEnum tipo;
 	
 	
 }

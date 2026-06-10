@@ -29,9 +29,9 @@ public class PacientesController {
 	
 
 	@RequestMapping(value ="/add", method={RequestMethod.PUT} )
-	public BodyBuilder addPaciente(@RequestBody PacienteDto pacienteDto) throws Exception {
+	public ResponseEntity<?> addPaciente(@RequestBody PacienteDto pacienteDto) throws Exception {
 		personaService.add(pacienteDto);
-		return ResponseEntity.ok();
+		return ResponseEntity.ok().build();
 	}
 	
 	@RequestMapping(value ="/get/{documento}", method={RequestMethod.GET} )

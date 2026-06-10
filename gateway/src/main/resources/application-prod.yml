@@ -6,14 +6,22 @@ spring:
       discovery:
         locator:
           enabled: 'true'
-      routes[0]:
-        id: modulo-pacientes
-        uri: lb://MODULO-PACIENTES
-        predicates[0]: Path=/api/pacientes/**
-      routes[1]:
-        id: booking-microservice
-        uri: lb://MODULO-ATENCIONES
-        predicates[0]: Path=/api/atenciones/**
+      routes:
+        - id: modulo-pacientes
+          uri: lb://MODULO-PACIENTES
+          predicates:
+           - Path=/api/pacientes/**
+# Borra "/api/pacientes" de la URL antes de enviar la petición al microservicio
+          filters:
+          - StripPrefix=2 
+
+        - id: modulo-atenciones
+          uri: lb://MODULO-ATENCIONES
+          predicates:
+           - Path=/api/atenciones/**
+# Borra "/api/atenciones" de la URL antes de enviar la petición al microservicio
+          filters:
+          - StripPrefix=2
     loadbalancer:
       ribbon:
         enabled: 'false'
@@ -23,3 +31,24 @@ eureka:
   client:
     service-url:
         defaultZone: http://eurekaserver:8761/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+# Ordena los servicios alfabéticamente en el menú desplegable
+    operationsSorter: alpha
+    tagsSorter: alpha
+# Habilita la detección automática basada en las rutas de arriba
+    use-root-path: true
+    urls:
+     - name: modulo-pacientes
+       url: /api/pacientes/v3/api-docs
+     - name: modulo-atenciones
+       url: /api/atenciones/v3/api-docs
