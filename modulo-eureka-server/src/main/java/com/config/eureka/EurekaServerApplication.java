@@ -12,9 +12,7 @@ public class EurekaServerApplication {
 
 	public static void main(String[] args) {
 	    SpringApplication app = new SpringApplication(EurekaServerApplication.class);
-	    app.setAdditionalProfiles("dev");
 	    app.run(args);
-	
 	}
 
 }

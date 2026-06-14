@@ -98,6 +98,7 @@
 	<modules>
 		<module>modulo-pacientes</module>
 		<module>modulo-atenciones</module>
+		<module>admin-service</module>
 		<module>gateway</module>
 		<module>springconfigserver</module>
 		<module>modulo-eureka-server</module>

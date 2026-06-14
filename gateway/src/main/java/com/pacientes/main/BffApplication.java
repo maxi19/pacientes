@@ -10,7 +10,6 @@ public class BffApplication {
 
 	public static void main(String[] args) {
 	    SpringApplication app = new SpringApplication(BffApplication.class);
-	   // app.setAdditionalProfiles("dev");
 	    app.run(args);		
 	}
 
