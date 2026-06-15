@@ -12,7 +12,6 @@ public class ConfigServerApplication {
 
 	public static void main(String[] args) {
 	    SpringApplication app = new SpringApplication(ConfigServerApplication.class);
-	    //app.setAdditionalProfiles("dev");
 	    app.run(args);
 	}
 

@@ -25,6 +25,32 @@ services:
     networks:
      - microservices
     hostname: configserver
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  admin-service:
+     container_name: adminservice
+     image: mrunixmaxi/adminservice:1.0
+     environment:
+       - JAVA_OPTS=-XX:-UseContainerSupport
+       - SPRING_APPLICATION_NAME=adminservice
+       - SPRING_PROFILES_ACTIVE=prod
+       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
+     restart: always
+     ports:
+       - "8084:8084"
+     depends_on:
+       eurekaserver:
+         condition: service_started
+       configserver:
+         condition: service_healthy
+     networks:
+       - microservices
+     hostname: adminservice
 
   gateway:
     container_name: gateway
@@ -32,7 +58,6 @@ services:
     environment:
     - JAVA_OPTS=-XX:-UseContainerSupport
     - SPRING_APPLICATION_NAME=gateway
-    - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
     - SPRING_PROFILES_ACTIVE=prod
     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
     - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eurekaserver:8761/eureka/
@@ -44,7 +69,13 @@ services:
     - microservices
     hostname: gateway
     depends_on:
-     - eurekaserver
+      eurekaserver:
+        condition: service_started
+      db:
+        condition: service_started
+      configserver:
+        condition: service_healthy
+
   db:
    image: mysql:5.7
    container_name: hospitaldb
@@ -71,8 +102,7 @@ services:
     environment:
     - JAVA_OPTS=-XX:-UseContainerSupport
     # 👇 AGREGADO: Forzamos el nombre de la app y la ruta del configserver en la red de Docker
-    - SPRING_APPLICATION_NAME=MODULO-ATENCIONES
-    - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    - SPRING_APPLICATION_NAME=modulo-atenciones
     - SPRING_PROFILES_ACTIVE=prod
     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
     - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eurekaserver:8761/eureka/
@@ -84,9 +114,12 @@ services:
     - microservices
     hostname: atenciones
     depends_on:
-     - eurekaserver
-     - configserver
-     - db
+      eurekaserver:
+        condition: service_started
+      db:
+        condition: service_started
+      configserver:
+        condition: service_healthy
 
   pacientes:
     container_name: pacientes
@@ -94,8 +127,7 @@ services:
     environment:
     - JAVA_OPTS=-XX:-UseContainerSupport
     # 👇 AGREGADO: Forzamos el nombre de la app y la ruta del configserver en la red de Docker
-    - SPRING_APPLICATION_NAME=MODULO-PACIENTES
-    - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    - SPRING_APPLICATION_NAME=modulo-pacientes
     - SPRING_PROFILES_ACTIVE=prod
     - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eurekaserver:8761/eureka/
     - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://eurekaserver:8761/eureka/
@@ -107,10 +139,12 @@ services:
     - microservices
     hostname: pacientes
     depends_on:
-     - eurekaserver
-     - configserver
-     - db
-
+      eurekaserver:
+        condition: service_started
+      db:
+        condition: service_started
+      configserver:
+        condition: service_healthy
 
 
 volumes:
