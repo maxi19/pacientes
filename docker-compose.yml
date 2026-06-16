@@ -146,10 +146,44 @@ services:
       configserver:
         condition: service_healthy
 
+  keycloak-db:
+    image: postgres:16-alpine
+    container_name: keycloak-db
+    restart: always
+    environment:
+     POSTGRES_DB: keycloak
+     POSTGRES_USER: keycloak_user
+     POSTGRES_PASSWORD: keycloak_password
+    volumes:
+    - keycloak_db_data:/var/lib/postgresql/data
+    networks:
+    - microservices
+
+# 🔐 NUEVO: Servidor Keycloak
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: keycloak
+    command: start-dev
+    restart: always
+    environment:
+     KC_BOOTSTRAP_ADMIN_USERNAME: admin
+     KC_BOOTSTRAP_ADMIN_PASSWORD: admin_password
+     KC_DB: postgres
+     KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+     KC_DB_USERNAME: keycloak_user
+     KC_DB_PASSWORD: keycloak_password
+    ports:
+     - "8180:8080"              # Mapeado al 8180 para evitar choque con el Gateway
+    depends_on:
+    - keycloak-db
+    networks:
+    - microservices
+    hostname: keycloak
+
 
 volumes:
   mysql_data:
- 
+  keycloak_db_data:
 networks:
   microservices:
     driver: bridge
