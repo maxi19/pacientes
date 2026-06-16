@@ -2,6 +2,7 @@ package com.pacientes.main.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -13,7 +14,8 @@ public class GatewaySecurityConfig {
 
 	
 	  @Bean
-	    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+	  @Profile("prod")
+	  public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 	        http
 	            .csrf(ServerHttpSecurity.CsrfSpec::disable)
 	            .authorizeExchange(exchanges -> exchanges
@@ -26,10 +28,23 @@ public class GatewaySecurityConfig {
 	                // 4. Cualquier otra petición a tus APIs de negocio requerirá autenticación
 	                .anyExchange().authenticated()
 	            )
-	            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+	            //.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+	            .oauth2Login(Customizer.withDefaults()); 
+	        return http.build();
+	    }
+
+	   @Bean
+	   @Profile("dev")
+	    public SecurityWebFilterChain securityWebFilterChainDev(ServerHttpSecurity http) {
+	        http
+	            .csrf(ServerHttpSecurity.CsrfSpec::disable)
+	            .authorizeExchange(exchanges -> exchanges
+	                // En desarrollo local, permitimos el acceso libre en el Gateway 
+	                // para que puedas probar las APIs directo contra los microservicios mocks
+	                .anyExchange().permitAll()
+	            );
 
 	        return http.build();
 	    }
-	
 	
 }

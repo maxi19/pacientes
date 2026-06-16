@@ -39,11 +39,11 @@
     	<groupId>org.springframework.boot</groupId>
     	<artifactId>spring-boot-starter-security</artifactId>
 	</dependency>
-	<!-- Para validar tokens JWT -->
-	<dependency>
-    	<groupId>org.springframework.boot</groupId>
-    	<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-	</dependency>
+	<!-- Su trabajo es hablar con Keycloak , por lotanto es el cliente -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-oauth2-client</artifactId>
+    </dependency>
 
   </dependencies>
   
