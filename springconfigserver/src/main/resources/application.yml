@@ -7,7 +7,11 @@ spring:
         git:
           uri: https://github.com/maxi19/config-Server
           clone-on-start: true
-          default-label: main
+          default-label: security
+  security:
+    user:
+      name: configUser
+      password: configPassword123
 server:
   port: '8888'
 ---
@@ -18,7 +22,12 @@ spring:
 eureka:
   client:
      service-url:
-       defaultZone: http://localhost:8761/eureka/
+       defaultZone: http://eurekaUser:eurekaPassword123@localhost:8761/eureka/
+  security:
+    user:
+      name: configUser
+      password: configPassword123
+
 ---
 spring:
   config:
