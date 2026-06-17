@@ -12,4 +12,4 @@ spring:
   config:
     activate:
       on-profile: prod
-    import: "optional:configserver:http://configserver:8888"
+    import: "optional:configserver:http://configUserProd:configPasswordProd123@configserver:8888"

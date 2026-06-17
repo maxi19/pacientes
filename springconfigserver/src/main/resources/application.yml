@@ -36,4 +36,8 @@ spring:
 eureka:
   client:
     service-url:
-        defaultZone: http://eurekaserver:8761/eureka/
+        defaultZone: http://eurekaProdUser:eurekaProdPassword123@eurekaserver:8761/eureka/
+  security:
+    user:
+      name: configUser
+      password: configPassword123
