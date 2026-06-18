@@ -8,10 +8,6 @@ spring:
           uri: https://github.com/maxi19/config-Server
           clone-on-start: true
           default-label: security
-  security:
-    user:
-      name: configUser
-      password: configPassword123
 server:
   port: '8888'
 ---
@@ -19,25 +15,31 @@ spring:
   config:
     activate:
       on-profile: dev
-eureka:
-  client:
-     service-url:
-       defaultZone: http://eurekaUser:eurekaPassword123@localhost:8761/eureka/
   security:
     user:
       name: configUser
       password: configPassword123
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+  client:
+    service-url:
+      defaultZone: http://eurekaUser:eurekaPassword123@localhost:8761/eureka/
 
 ---
 spring:
   config:
     activate:
       on-profile: prod
+  security:
+    user:
+      name: configUserProd
+      password: configPasswordProd123
+
 eureka:
   client:
     service-url:
-        defaultZone: http://eurekaProdUser:eurekaProdPassword123@eurekaserver:8761/eureka/
-  security:
-    user:
-      name: configUser
-      password: configPassword123
+      defaultZone: http://eurekaProdUser:eurekaProdPassword123@eurekaserver:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
